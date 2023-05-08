@@ -1,11 +1,14 @@
-import styles from './page.module.css'
+import { S3Client } from "@aws-sdk/client-s3";
+import dotenv from 'dotenv';
+dotenv.config();
+import styles from './styling/page.module.css'
 import db from '../../server/modules/pool'
 
-import CreateName from './CreateName';
-
+import CreateName from './CreateName/CreateName';
+import DisplayName from './DispayName/DisplayName';
 
 async function getNames() {
-  const res = await db.query('SELECT * FROM name');
+  const res = await db.query('SELECT * FROM name ORDER BY "id" ASC');
   const names = res.rows;
   return names
 }
@@ -19,11 +22,7 @@ export default async function Home() {
       <div style={{ display: "flex", flexDirection: "column" }}>
         {names &&
           names.map((name, index) => (
-            <button
-              key={name.id}
-              style={{ backgroundColor: "transparent", border: "none", margin: '1rem' }}>
-              {name.name}
-            </button>))}
+            <DisplayName name={name} />))}
       </div>
     </main>
   )
